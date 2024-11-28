@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/The-Fox-Hunt/auth/internal/repository/pg"
 	"github.com/The-Fox-Hunt/auth/internal/rpc"
 	"github.com/The-Fox-Hunt/auth/pkg/auth"
 	"google.golang.org/grpc"
@@ -9,7 +10,9 @@ import (
 )
 
 func main() {
-	service := rpc.New()
+	repo := pg.NewRepository()
+
+	service := rpc.New(repo)
 
 	grpcServer := grpc.NewServer()
 
