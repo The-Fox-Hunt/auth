@@ -3,9 +3,11 @@ package pg
 import (
 	"context"
 	"fmt"
+	"log"
+
+	"github.com/The-Fox-Hunt/auth/internal/model"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"log"
 )
 
 type Repository struct {
@@ -28,10 +30,23 @@ func NewRepository() *Repository {
 }
 
 func (r *Repository) Insert(ctx context.Context, username, password string) error {
-	_, ok := r.storage[username]
-	if ok {
-		return fmt.Errorf("username %s already exists", username)
+	query := "INSERT INTO participants (user_uuid, login, password) VALUES($1, $2, $3)"
+	_, err := r.conn.ExecContext(ctx, query, "ef969bba-6192-4175-b63e-832481e6b563", username, password)
+	if err != nil {
+		return err
 	}
-	r.storage[username] = password
+
 	return nil
+}
+
+func (r *Repository) GetPassword(ctx context.Context, username string) (model.UserPassword, error) {
+	query := "SELECT password FROM participants WHERE login = $1"
+	var storedPassword model.UserPassword
+	err := r.conn.GetContext(ctx, &storedPassword, query, username)
+
+	if err != nil {
+		return model.UserPassword{}, err
+	}
+
+	return storedPassword, nil
 }

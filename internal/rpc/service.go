@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+
 	"github.com/The-Fox-Hunt/auth/pkg/auth"
 )
 
