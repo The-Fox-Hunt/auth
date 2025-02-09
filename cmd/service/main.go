@@ -1,12 +1,13 @@
 package main
 
 import (
+	"log"
+	"net"
+
 	"github.com/The-Fox-Hunt/auth/internal/repository/pg"
 	"github.com/The-Fox-Hunt/auth/internal/rpc"
 	"github.com/The-Fox-Hunt/auth/pkg/auth"
 	"google.golang.org/grpc"
-	"log"
-	"net"
 )
 
 func main() {
