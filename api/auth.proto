@@ -1,11 +1,13 @@
 syntax = "proto3";
 
+// Код для пересборки rpc. Должна запускаться из корня
 //protoc --go_out=./pkg --go-grpc_out=./pkg api/auth.proto
 option go_package = "./auth";
 
 service AuthService {
   rpc Login(LoginIn) returns (LoginOut) {};
   rpc Signup(SignupIn) returns (SignupOut) {};
+  rpc ChangePassword(ChangePasswordIn) returns (ChangePasswordOut) {};
 }
 
 message LoginIn {
@@ -25,3 +27,13 @@ message SignupIn {
 message SignupOut {
   bool success = 1;
 }
+
+message ChangePasswordIn {
+  string OldPassword = 1;
+  string NewPassword = 2;
+}
+
+message ChangePasswordOut {
+  bool success = 1;
+}
+

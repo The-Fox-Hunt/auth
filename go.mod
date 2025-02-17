@@ -7,7 +7,7 @@ require (
 	github.com/jmoiron/sqlx v1.4.0
 	github.com/lib/pq v1.10.9
 	google.golang.org/grpc v1.68.0
-	google.golang.org/protobuf v1.34.2
+	google.golang.org/protobuf v1.36.5
 )
 
 require (

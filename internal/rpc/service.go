@@ -4,11 +4,12 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/The-Fox-Hunt/auth/internal/model"
 	"github.com/The-Fox-Hunt/auth/pkg/auth"
 	"github.com/golang-jwt/jwt"
 )
 
-const jwtSecret = "carrot"
+
 
 type Service struct {
 	auth.UnimplementedAuthServiceServer
@@ -19,6 +20,24 @@ func New(r Repo) *Service {
 	return &Service{
 		repo: r,
 	}
+}
+
+func (s *Service) ChangePassword(ctx context.Context, in *auth.ChangePasswordIn) (*auth.ChangePasswordOut, error) {
+
+	username, ok := ctx.Value("username").(string)
+    if !ok {
+        return nil, fmt.Errorf("username not found in context")
+    }
+	
+	err := s.repo.UpdatePassword(ctx, username, model.UserPassword{Password: in.NewPassword})
+	
+	if err != nil {
+        return nil, fmt.Errorf("failed to change password: %w", err)
+    }
+	
+	return &auth.ChangePasswordOut{
+        Success: true,
+    }, nil
 }
 
 func (s *Service) Login(ctx context.Context, in *auth.LoginIn) (*auth.LoginOut, error) {

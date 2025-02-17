@@ -50,3 +50,15 @@ func (r *Repository) GetPassword(ctx context.Context, username string) (model.Us
 
 	return storedPassword, nil
 }
+
+func (r *Repository) UpdatePassword(ctx context.Context, username string, newPassword model.UserPassword) error {
+	query := "UPDATE participants SET password = $1 WHERE login = $2 RETURNING password"
+	var updatedPassword string
+	err := r.conn.GetContext(ctx, &updatedPassword, query, newPassword.Password, username)
+
+	if err != nil {
+		return fmt.Errorf("cant changed password: %v", err)
+	}
+
+	return nil
+}

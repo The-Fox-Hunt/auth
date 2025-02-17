@@ -9,4 +9,5 @@ import (
 type Repo interface {
 	Insert(ctx context.Context, username, password string) error
 	GetPassword(ctx context.Context, username string) (model.UserPassword, error)
+	UpdatePassword(ctx context.Context, username string, newPassword model.UserPassword) error
 }
