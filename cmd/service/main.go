@@ -15,9 +15,7 @@ func main() {
 
 	service := rpc.New(repo)
 
-	grpcServer := grpc.NewServer(
-		grpc.UnaryInterceptor(rpc.JWTAuthInterceptor),
-	)
+	grpcServer := grpc.NewServer()
 
 	auth.RegisterAuthServiceServer(grpcServer, service)
 
@@ -25,7 +23,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
-	grpcServer.Serve(lis)
+
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
