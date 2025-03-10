@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
-	"os"
 
+	"github.com/The-Fox-Hunt/auth/config"
 	"github.com/The-Fox-Hunt/auth/internal/model"
 	"github.com/The-Fox-Hunt/auth/pkg/auth"
 	"github.com/golang-jwt/jwt"
@@ -25,12 +25,12 @@ func New(r Repo) *Service {
 var jwtSecret []byte
 
 func init() {
-	secret, err := os.ReadFile("/run/secrets/jwt_secret")
+	jwtSecret, err := config.GetSecret("JWT_SECRET")
 	if err != nil {
-		log.Fatalf("Ошибка чтения JWT Secret: %v", err)
+		log.Fatalf("Ошибка загрузки JWT: %v", err)
 	}
-	jwtSecret = secret
-	fmt.Println("JWT Secret загружен успешно") // Только для теста
+
+	fmt.Println("JWT загружен:", jwtSecret)
 }
 
 func (s *Service) ChangePassword(ctx context.Context, in *auth.ChangePasswordIn) (*auth.ChangePasswordOut, error) {
