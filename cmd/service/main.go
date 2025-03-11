@@ -19,7 +19,7 @@ func main() {
 
 	auth.RegisterAuthServiceServer(grpcServer, service)
 
-	lis, err := net.Listen("tcp", ":8088")
+	lis, err := net.Listen("tcp", ":8000")
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}

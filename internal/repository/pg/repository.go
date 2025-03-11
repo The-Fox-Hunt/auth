@@ -17,7 +17,7 @@ type Repository struct {
 
 func NewRepository() *Repository {
 	connectCmd := fmt.Sprintf("user=%s password=%s dbname=%s host=%s port=%s sslmode=disable",
-		"master", "master", "master", "localhost", "3015")
+		"master", "master", "master", "auth-db", "5432")
 
 	db, err := sqlx.Connect("postgres", connectCmd)
 	if err != nil {

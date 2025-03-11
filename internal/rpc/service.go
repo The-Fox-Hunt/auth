@@ -34,7 +34,7 @@ func init() {
 }
 
 func (s *Service) ChangePassword(ctx context.Context, in *auth.ChangePasswordIn) (*auth.ChangePasswordOut, error) {
-	username, ok := ctx.Value("username").(string)
+	username, ok := ctx.Value(model.Username).(string)
 	if !ok {
 		return nil, fmt.Errorf("username not found in context")
 	}
