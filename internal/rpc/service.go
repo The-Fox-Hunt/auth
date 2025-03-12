@@ -17,6 +17,14 @@ type Service struct {
 }
 
 func New(r Repo) *Service {
+
+	jwtSecret, err := config.GetSecret("JWT_SECRET")
+	if err != nil {
+		log.Fatalf("Ошибка загрузки JWT: %v", err)
+	}
+
+	fmt.Println("JWT загружен:", jwtSecret)
+
 	return &Service{
 		repo: r,
 	}
@@ -24,22 +32,16 @@ func New(r Repo) *Service {
 
 var jwtSecret []byte
 
-func init() {
-	jwtSecret, err := config.GetSecret("JWT_SECRET")
-	if err != nil {
-		log.Fatalf("Ошибка загрузки JWT: %v", err)
-	}
-
-	fmt.Println("JWT загружен:", jwtSecret)
-}
-
 func (s *Service) ChangePassword(ctx context.Context, in *auth.ChangePasswordIn) (*auth.ChangePasswordOut, error) {
-	username, ok := ctx.Value(model.Username).(string)
-	if !ok {
-		return nil, fmt.Errorf("username not found in context")
+	//username, ok := ctx.Value(model.Username).(string)
+	if in.Username == "" {
+		return nil, fmt.Errorf("username not found message")
 	}
 
-	err := s.repo.UpdatePassword(ctx, username, model.UserPassword{Password: in.NewPassword})
+	log.Printf("Received ChangePassword request: Username=%s, OldPassword=%s, NewPassword=%s",
+		in.Username, in.OldPassword, in.NewPassword)
+
+	err := s.repo.UpdatePassword(ctx, in.Username, model.UserPassword{Password: in.NewPassword})
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to change password: %w", err)
