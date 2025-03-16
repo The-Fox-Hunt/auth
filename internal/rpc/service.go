@@ -17,7 +17,6 @@ type Service struct {
 }
 
 func New(r Repo) *Service {
-
 	jwtSecret, err := config.GetSecret("JWT_SECRET")
 	if err != nil {
 		log.Fatalf("Ошибка загрузки JWT: %v", err)

@@ -13,7 +13,6 @@ import (
 )
 
 func TestService_Singup(t *testing.T) {
-
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
@@ -22,7 +21,6 @@ func TestService_Singup(t *testing.T) {
 	t.Setenv("JWT_SECRET", "test-secret")
 
 	t.Run("sould return succes", func(t *testing.T) {
-
 		ctx := context.Background()
 		mockRepo := NewMockRepo(ctrl)
 		s := New(mockRepo)
@@ -50,14 +48,13 @@ func TestService_Singup(t *testing.T) {
 			Password: "testpass",
 		})
 
-		assert.NotNil(t, resp)        
-		assert.False(t, resp.Success) 
+		assert.NotNil(t, resp)
+		assert.False(t, resp.Success)
 		assert.ErrorContains(t, err, "DB error")
 	})
 }
 
 func TestService_Login(t *testing.T) {
-
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
@@ -140,5 +137,4 @@ func TestService_Login(t *testing.T) {
 		assert.ErrorContains(t, err, "failed to generate JWT token")
 		assert.Nil(t, resp)
 	})
-
 }
