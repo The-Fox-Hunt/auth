@@ -29,9 +29,8 @@ message SignupOut {
 }
 
 message ChangePasswordIn {
-  string Username = 1;
-  string OldPassword = 2;
-  string NewPassword = 3;
+  string OldPassword = 1;
+  string NewPassword = 2;
 }
 
 message ChangePasswordOut {

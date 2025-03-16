@@ -13,17 +13,19 @@ import (
 )
 
 func TestService_Singup(t *testing.T) {
+
+	t.Parallel()
+
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
 	t.Setenv("JWT_SECRET", "test-secret")
 
-	mockRepo := NewMockRepo(ctrl)
-	s := New(mockRepo)
-
 	t.Run("sould return succes", func(t *testing.T) {
 
 		ctx := context.Background()
+		mockRepo := NewMockRepo(ctrl)
+		s := New(mockRepo)
 
 		mockRepo.EXPECT().Insert(ctx, "testuser", "testpass").Return(nil).Times(1)
 
@@ -38,6 +40,8 @@ func TestService_Singup(t *testing.T) {
 
 	t.Run("should return error if Insert fails", func(t *testing.T) {
 		ctx := context.Background()
+		mockRepo := NewMockRepo(ctrl)
+		s := New(mockRepo)
 
 		mockRepo.EXPECT().Insert(ctx, "testuser5", "testpass").Return(errors.New("DB error")).Times(1)
 
@@ -46,8 +50,8 @@ func TestService_Singup(t *testing.T) {
 			Password: "testpass",
 		})
 
-		assert.NotNil(t, resp)        // ✅ Должен быть объект, а не `nil`
-		assert.False(t, resp.Success) // ✅ Убеждаемся, что `Success=false`
+		assert.NotNil(t, resp)        
+		assert.False(t, resp.Success) 
 		assert.ErrorContains(t, err, "DB error")
 	})
 }
@@ -59,11 +63,10 @@ func TestService_Login(t *testing.T) {
 
 	t.Setenv("JWT_SECRET", "test-secret")
 
-	mockRepo := NewMockRepo(ctrl)
-	s := New(mockRepo)
-
 	t.Run("should return JWT token for correct password", func(t *testing.T) {
 		ctx := context.Background()
+		mockRepo := NewMockRepo(ctrl)
+		s := New(mockRepo)
 
 		mockRepo.EXPECT().GetPassword(ctx, "testuser").Return(model.UserPassword{Password: "testpass"}, nil).Times(1)
 
@@ -85,6 +88,8 @@ func TestService_Login(t *testing.T) {
 
 	t.Run("should return error if user not found", func(t *testing.T) {
 		ctx := context.Background()
+		mockRepo := NewMockRepo(ctrl)
+		s := New(mockRepo)
 
 		mockRepo.EXPECT().GetPassword(ctx, "testuser").Return(model.UserPassword{}, errors.New("user not found")).Times(1)
 
@@ -99,6 +104,8 @@ func TestService_Login(t *testing.T) {
 
 	t.Run("should return error if password is incorrect", func(t *testing.T) {
 		ctx := context.Background()
+		mockRepo := NewMockRepo(ctrl)
+		s := New(mockRepo)
 
 		mockRepo.EXPECT().GetPassword(ctx, "testuser").Return(model.UserPassword{Password: "correctpass"}, nil).Times(1)
 
@@ -116,6 +123,8 @@ func TestService_Login(t *testing.T) {
 
 	t.Run("should return error if JWT token generation fails", func(t *testing.T) {
 		ctx := context.Background()
+		mockRepo := NewMockRepo(ctrl)
+		s := New(mockRepo)
 
 		mockRepo.EXPECT().GetPassword(ctx, "testuser").Return(model.UserPassword{Password: "testpass"}, nil).Times(1)
 

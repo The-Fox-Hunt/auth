@@ -4,6 +4,7 @@ import (
 	"log"
 	"net"
 
+	"github.com/The-Fox-Hunt/auth/internal/infra"
 	"github.com/The-Fox-Hunt/auth/internal/repository/pg"
 	"github.com/The-Fox-Hunt/auth/internal/rpc"
 	"github.com/The-Fox-Hunt/auth/pkg/auth"
@@ -15,7 +16,9 @@ func main() {
 
 	service := rpc.New(repo)
 
-	grpcServer := grpc.NewServer()
+	grpcServer := grpc.NewServer(
+		grpc.UnaryInterceptor(infra.UnaryInterceptor),
+	)
 
 	auth.RegisterAuthServiceServer(grpcServer, service)
 
