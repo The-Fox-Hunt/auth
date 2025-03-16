@@ -3,6 +3,7 @@ package rpc
 import (
 	"context"
 	"errors"
+	"os"
 	"testing"
 
 	"github.com/The-Fox-Hunt/auth/internal/model"
@@ -12,13 +13,21 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestMain(m *testing.M) {
+	os.Setenv("JWT_SECRET", "test-secret")
+	jwtSecret = []byte("test-secret") 
+
+	exitCode := m.Run() // Запускаем тесты
+	os.Exit(exitCode)   // Выходим с кодом тестов
+}
+
 func TestService_Singup(t *testing.T) {
 	t.Parallel()
 
 	ctrl := gomock.NewController(t)
 	defer ctrl.Finish()
 
-	t.Setenv("JWT_SECRET", "test-secret")
+	//t.Setenv("JWT_SECRET", "test-secret")
 
 	t.Run("sould return succes", func(t *testing.T) {
 		ctx := context.Background()
@@ -122,10 +131,9 @@ func TestService_Login(t *testing.T) {
 		ctx := context.Background()
 		mockRepo := NewMockRepo(ctrl)
 		s := New(mockRepo)
-
+		
 		mockRepo.EXPECT().GetPassword(ctx, "testuser").Return(model.UserPassword{Password: "testpass"}, nil).Times(1)
-
-		// Ломаем `jwtSecret`, чтобы тест проверить ошибку генерации токена
+		
 		jwtSecret = nil
 
 		resp, err := s.Login(ctx, &auth.LoginIn{

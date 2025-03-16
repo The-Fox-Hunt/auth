@@ -58,6 +58,11 @@ func (s *Service) Login(ctx context.Context, in *auth.LoginIn) (*auth.LoginOut, 
 	}
 
 	if storedPassword.Password == in.Password {
+
+		if jwtSecret == nil || len(jwtSecret) == 0 {
+			return nil, fmt.Errorf("failed to generate JWT token: jwtSecret is nil or empty")
+		}
+
 		token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
 			"username": in.Username,
 		})

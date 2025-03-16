@@ -2,19 +2,21 @@ version: '3.9'
 
 services:
   auth:
+    container_name: auth 
     build:
       context: .
       dockerfile: Dockerfile
     ports:
       - "8001:8000"  # Можно поменять 8000 на 8001, если уже занят
     depends_on:
-      - db
+      - auth-db
     networks:
       - auth_net
     environment:
       - DATABASE_URL=postgres://master:master@auth-db:5432/master
+      - JWT_SECRET=${JWT_SECRET}
 
-  db:
+  auth-db:
     container_name: auth-db
     image: postgres:15
     environment:
