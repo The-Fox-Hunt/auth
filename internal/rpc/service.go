@@ -33,15 +33,15 @@ func New(r Repo) *Service {
 var jwtSecret []byte
 
 func (s *Service) ChangePassword(ctx context.Context, in *auth.ChangePasswordIn) (*auth.ChangePasswordOut, error) {
-	//username, ok := ctx.Value(model.Username).(string)
-	if in.Username == "" {
+	username, ok := ctx.Value(model.Username).(string)
+	if !ok {
 		return nil, fmt.Errorf("username not found message")
 	}
 
-	log.Printf("Received ChangePassword request: Username=%s, OldPassword=%s, NewPassword=%s",
-		in.Username, in.OldPassword, in.NewPassword)
+	log.Printf("Received ChangePassword request: OldPassword=%s, NewPassword=%s",
+		in.OldPassword, in.NewPassword)
 
-	err := s.repo.UpdatePassword(ctx, in.Username, model.UserPassword{Password: in.NewPassword})
+	err := s.repo.UpdatePassword(ctx, username, model.UserPassword{Password: in.NewPassword})
 
 	if err != nil {
 		return nil, fmt.Errorf("failed to change password: %w", err)
