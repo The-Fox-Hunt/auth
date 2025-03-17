@@ -17,17 +17,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Print working directory
-        run: pwd && ls -la
-
       - name: Set up Go
         uses: actions/setup-go@v4
         with:
           go-version: '1.24'
 
       - name: Install dependencies
-        run: go mod tidy
-        working-directory: ./auth
+        run: go mod tidy  
 
       - name: Install golangci-lint
         run: |
@@ -35,9 +31,7 @@ jobs:
           echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
 
       - name: Run Linters
-        run: golangci-lint run ./...
-        working-directory: ./auth
+        run: golangci-lint run ./...  
 
       - name: Run Unit Tests
-        run: go test ./... -cover
-        working-directory: ./auth
+        run: go test ./... -cover  
