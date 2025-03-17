@@ -1,0 +1,44 @@
+name: Auth CI
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "auth/**"   # ✅ Триггерится при изменениях в auth
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "auth/**"
+
+jobs:
+  lint-and-test:
+    name: Run Linters & Unit Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout repository
+        uses: actions/checkout@v3
+
+      - name: ⚙️ Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.24'
+
+      - name: 📦 Install dependencies
+        run: go mod tidy
+        working-directory: auth
+
+      - name: 🔍 Install golangci-lint
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
+          echo "$(go env GOPATH)/bin" >> $GITHUB_PATH
+
+      - name: ✅ Run Linters
+        run: golangci-lint run ./...
+        working-directory: auth
+
+      - name: 🧪 Run Unit Tests
+        run: go test ./... -cover
+        working-directory: auth
