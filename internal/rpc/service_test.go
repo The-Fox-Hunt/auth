@@ -15,7 +15,7 @@ import (
 
 func TestMain(m *testing.M) {
 	os.Setenv("JWT_SECRET", "test-secret")
-	jwtSecret = []byte("test-secret") 
+	jwtSecret = []byte("test-secret")
 
 	exitCode := m.Run() // Запускаем тесты
 	os.Exit(exitCode)   // Выходим с кодом тестов
@@ -131,9 +131,9 @@ func TestService_Login(t *testing.T) {
 		ctx := context.Background()
 		mockRepo := NewMockRepo(ctrl)
 		s := New(mockRepo)
-		
+
 		mockRepo.EXPECT().GetPassword(ctx, "testuser").Return(model.UserPassword{Password: "testpass"}, nil).Times(1)
-		
+
 		jwtSecret = nil
 
 		resp, err := s.Login(ctx, &auth.LoginIn{

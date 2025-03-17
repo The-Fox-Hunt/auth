@@ -58,8 +58,7 @@ func (s *Service) Login(ctx context.Context, in *auth.LoginIn) (*auth.LoginOut, 
 	}
 
 	if storedPassword.Password == in.Password {
-
-		if jwtSecret == nil || len(jwtSecret) == 0 {
+		if len(jwtSecret) == 0 {
 			return nil, fmt.Errorf("failed to generate JWT token: jwtSecret is nil or empty")
 		}
 
