@@ -4,8 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - "auth/**"   # ✅ Деплой только при изменениях в auth
   workflow_run:
     workflows: ["Auth CI"]
     branches: [main]
