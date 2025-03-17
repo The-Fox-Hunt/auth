@@ -15,19 +15,22 @@ jobs:
     name: Build & Push to Docker Hub
     runs-on: ubuntu-latest
     steps:
-      - name: 📥 Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - name: 🔑 Log in to Docker Hub
+      - name: Debug Path
+        run: pwd && ls -la  # Проверяем путь перед сборкой
+
+      - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_PASSWORD }}
 
-      - name: 🏗️ Build Docker Image
+      - name: Build Docker Image
         run: |
-          docker build -t mydockerhub/auth:latest ./auth
+          docker build -t mydockerhub/auth:latest .
 
-      - name: 🚀 Push Docker Image to Docker Hub
+      - name: Push Docker Image to Docker Hub
         run: |
           docker push mydockerhub/auth:latest
